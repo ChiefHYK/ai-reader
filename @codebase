@@ -1,0 +1,385 @@
+# @codebase文件说明
+
+此文件用于Cursor编辑器的AI辅助功能：
+1. 为AI提供项目上下文信息
+2. 辅助代码补全和生成
+3. 提供项目结构参考
+4. 作为开发指南
+
+# Flutter Frontend
+# 项目结构
+
+## 前端 (Flutter)
+
+- lib/models: 数据模型
+- lib/views: UI视图
+- lib/services: 服务类
+- lib/utils: 工具类
+
+## 后端 (Node.js)
+
+- src: 源代码
+- tests: 测试代码
+
+# 环境要求
+
+- Flutter 3.x
+- Node.js 16+
+- MongoDB 4.4+
+- Docker (可选)
+## pubspec.yaml
+# Flutter项目的依赖配置文件，定义项目信息和依赖项
+
+name: ai_reading_app
+description: AI powered reading app
+version: 1.0.0+1
+environment:
+sdk: ">=2.17.0 <3.0.0"
+dependencies:
+flutter:
+sdk: flutter
+# 状态管理库
+get: ^4.6.5
+# 文本转语音库
+flutter_tts: ^3.5.0
+# 本地数据存储
+hive: ^2.2.3
+# 依赖注入
+provider: ^6.0.3
+# 网络请求
+http: ^0.13.5
+# 文件路径管理
+path_provider: ^2.0.11
+# 本地配置存储
+shared_preferences: ^2.0.15
+# PDF文件渲染
+pdf_render: ^1.3.0
+# EPUB文件支持
+epub_view: ^3.0.0
+
+
+## lib/main.dart
+# 应用程序入口文件，配置全局设置和主题
+
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+void main() {
+runApp(MyApp());
+}
+class MyApp extends StatelessWidget {
+@override
+Widget build(BuildContext context) {
+return GetMaterialApp(
+title: 'AI Reading App',
+theme: ThemeData(
+primarySwatch: Colors.blue,
+),
+home: HomePage(),
+);
+}
+}
+
+
+## lib/models/user.dart
+# 用户数据模型，定义用户相关的数据结构
+
+
+class User {
+final String id;
+final String username;
+final String email;
+final UserSettings settings;
+// 构造函数
+User({
+required this.id,
+required this.username,
+required this.email,
+required this.settings,
+});
+// JSON序列化方法
+factory User.fromJson(Map<String, dynamic> json) {
+return User(
+id: json['id'],
+username: json['username'],
+email: json['email'],
+settings: UserSettings.fromJson(json['settings']),
+);
+}
+}
+
+
+## lib/services/api_service.dart
+# API服务类，处理与后端的通信
+
+
+class ApiService extends GetxService {
+final String baseUrl = 'http://localhost:3000/api';
+// GET请求方法
+Future<Response> get(String path) async {
+try {
+return await GetConnect().get('$baseUrl/$path');
+} catch (e) {
+throw Exception('API Error: $e');
+}
+}
+// POST请求方法
+Future<Response> post(String path, dynamic data) async {
+try {
+return await GetConnect().post('$baseUrl/$path', data);
+} catch (e) {
+throw Exception('API Error: $e');
+}
+}
+}
+
+
+# Node.js Backend
+
+## package.json
+# Node.js项目配置文件，定义项目依赖和脚本
+
+
+{
+"name": "ai-reading-backend",
+"version": "1.0.0",
+"main": "src/index.ts",
+"scripts": {
+"start": "node dist/index.js",
+"dev": "ts-node-dev src/index.ts",
+"build": "tsc",
+"test": "jest"
+},
+"dependencies": {
+// Web框架
+"express": "^4.18.2",
+// 数据库ODM
+"mongoose": "^6.7.0",
+// 身份认证
+"jsonwebtoken": "^8.5.1",
+// 密码加密
+"bcrypt": "^5.1.0",
+// 跨域支持
+"cors": "^2.8.5",
+// 环境变量
+"dotenv": "^16.0.3",
+// TypeScript支持
+"typescript": "^4.8.4"
+},
+"devDependencies": {
+// 类型定义文件
+"@types/express": "^4.17.14",
+"@types/jest": "^29.2.0",
+// 测试框架
+"jest": "^29.2.2",
+"ts-jest": "^29.0.3",
+// 开发服务器
+"ts-node-dev": "^2.0.0"
+}
+}
+
+
+## src/index.ts
+# 后端应用程序入口文件
+
+
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+// 加载环境变量
+dotenv.config();
+const app = express();
+// 中间件配置
+app.use(cors());
+app.use(express.json());
+// 数据库连接
+mongoose.connect(process.env.MONGODB_URI as string)
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err));
+// 启动服务器
+app.listen(3000, () => {
+console.log('Server running on port 3000');
+});
+
+
+## src/models/user.model.ts
+# 用户数据模型定义
+
+
+import mongoose from 'mongoose';
+const userSchema = new mongoose.Schema({
+username: { type: String, required: true },
+email: { type: String, required: true, unique: true },
+password: { type: String, required: true },
+settings: {
+voiceModel: String,
+speed: Number,
+pitch: Number
+}
+});
+export const User = mongoose.model('User', userSchema);
+
+
+# Docker Configuration
+
+## docker-compose.yml
+# Docker容器编排配置文件
+
+
+version: '3'
+services:
+# 前端服务配置
+frontend:
+build:
+context: ./frontend
+dockerfile: Dockerfile
+ports:
+"80:80"
+environment:
+API_URL=http://backend:3000
+# 后端服务配置
+backend:
+build:
+context: ./backend
+dockerfile: Dockerfile
+ports:
+"3000:3000"
+environment:
+MONGODB_URI=mongodb://mongodb:27017/aireading
+depends_on:
+mongodb
+# MongoDB数据库配置
+mongodb:
+image: mongo:4.4
+ports:
+"27017:27017"
+volumes:
+mongodb_data:/data/db
+volumes:
+mongodb_data:
+
+
+## frontend/Dockerfile
+# 前端Docker构建文件
+
+
+FROM nginx:alpine
+COPY build/web /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+
+## backend/Dockerfile
+# 后端Docker构建文件
+
+
+FROM node:16-alpine
+WORKDIR /app
+COPY package.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD ["npm", "start"]
+
+
+# Configuration Files
+
+## .env.example
+# 环境变量示例文件
+
+
+MongoDB连接URI
+MONGODB_URI=mongodb://localhost:27017/aireading
+JWT密钥
+JWT_SECRET=your_jwt_secret
+AI API密钥
+AI_API_KEY=your_ai_api_key
+
+
+## .gitignore
+# Git忽略文件配置
+
+
+Flutter相关
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+ios/Pods/
+android/.gradle/
+Node.js相关
+node_modules/
+dist/
+.env
+IDE相关
+.idea/
+.vscode/
+.iml
+其他
+.DS_Store
+.log
+
+
+## tsconfig.json
+# TypeScript配置文件
+
+{
+"compilerOptions": {
+"target": "es2017",
+"module": "commonjs",
+"outDir": "./dist",
+"rootDir": "./src",
+"strict": true,
+"esModuleInterop": true,
+"skipLibCheck": true,
+"forceConsistentCasingInFileNames": true
+},
+"include": ["src//"],
+"exclude": ["node_modules", "/.test.ts"]
+}
+
+
+# Testing
+
+## frontend/test/widget_test.dart
+# Flutter部件测试文件
+
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:ai_reading_app/main.dart';
+void main() {
+testWidgets('App should render', (WidgetTester tester) async {
+await tester.pumpWidget(MyApp());
+expect(find.text('AI Reading App'), findsOneWidget);
+});
+}
+
+
+## backend/tests/user.test.ts
+# 后端用户模块测试文件
+
+
+import { User } from '../src/models/user.model';
+import mongoose from 'mongoose';
+// 测试前连接数据库
+beforeAll(async () => {
+await mongoose.connect(process.env.MONGODB_URI as string);
+});
+// 测试后关闭数据库连接
+afterAll(async () => {
+await mongoose.connection.close();
+});
+// 用户模型测试用例
+describe('User Model Test', () => {
+it('should create & save user successfully', async () => {
+const user = new User({
+username: 'test',
+email: 'test@test.com',
+password: 'password123'
+});
+const savedUser = await user.save();
+expect(savedUser.username).toBe('test');
+});
+});
