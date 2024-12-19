@@ -19,6 +19,8 @@
 
 ## 后端 (Node.js)
 
+- src/models: 数据模型
+- src/routes: 路由定义
 - src: 源代码
 - tests: 测试代码
 
