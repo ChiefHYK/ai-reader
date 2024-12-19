@@ -15,6 +15,7 @@
 - lib/views: UI视图
 - lib/services: 服务类
 - lib/utils: 工具类
+- lib/main.dart: 应用入口
 
 ## 后端 (Node.js)
 

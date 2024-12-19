@@ -21,6 +21,12 @@ app.get('/', (req, res) => {
   res.send('AI Reading App Backend');
 });
 
+// 使用用户路由
+const userRoutes = require('./routes/user.routes');
+
+// 使用用户路由
+app.use('/api/users', userRoutes);
+
 // 启动服务器
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
