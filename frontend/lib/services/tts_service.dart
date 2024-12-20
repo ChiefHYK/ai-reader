@@ -14,7 +14,7 @@ class TtsService {
     );
 
     if (response.statusCode == 200) {
-      await audioPlayer.play(BytesSource(response.bodyBytes));
+      await audioPlayer.playBytes(response.bodyBytes);
     } else {
       throw Exception('Failed to synthesize text');
     }

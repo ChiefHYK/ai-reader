@@ -2,6 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+// 设置 Mongoose 的 strictQuery 选项
+mongoose.set('strictQuery', false);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
