@@ -33,6 +33,12 @@ const textRoutes = require('./routes/text.routes');
 // 使用文本路由
 app.use('/api/texts', textRoutes);
 
+// 使用TTS路由
+const ttsRoutes = require('./routes/tts.routes');
+
+// 使用TTS路由
+app.use('/api/tts', ttsRoutes);
+
 // 启动服务器
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'services/user_service.dart';
 import 'services/text_service.dart';
+import 'services/tts_service.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,6 +27,7 @@ class AuthPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final TextService textService = TextService();
   final TextEditingController textController = TextEditingController();
+  final TtsService ttsService = TtsService();
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +117,21 @@ class AuthPage extends StatelessWidget {
                 }
               },
               child: Text('Upload Text'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  await ttsService.synthesizeText(textController.text);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Text synthesized successfully')),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to synthesize text')),
+                  );
+                }
+              },
+              child: Text('Synthesize Text'),
             ),
           ],
         ),
