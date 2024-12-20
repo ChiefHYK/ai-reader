@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'services/user_service.dart';
+import 'services/text_service.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,6 +24,8 @@ class AuthPage extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextService textService = TextService();
+  final TextEditingController textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +49,10 @@ class AuthPage extends StatelessWidget {
               controller: passwordController,
               decoration: InputDecoration(labelText: 'Password'),
               obscureText: true,
+            ),
+            TextField(
+              controller: textController,
+              decoration: InputDecoration(labelText: 'Enter text to upload'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -93,6 +100,21 @@ class AuthPage extends StatelessWidget {
                 }
               },
               child: Text('Login'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  await textService.uploadText(textController.text);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Text uploaded successfully')),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to upload text')),
+                  );
+                }
+              },
+              child: Text('Upload Text'),
             ),
           ],
         ),

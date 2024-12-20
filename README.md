@@ -1,4 +1,4 @@
-# AI听书App
+# AI Reader App
 
 一个基于AI大模型的智能听书应用，支持多种文本格式，提供个性化语音合成和学习计划管理功能。
 
@@ -11,7 +11,7 @@
 - 跨平台支持(iOS/Android)
 
 # 前端功能
-- 实现用户注册和登录界面
+- 实现用户注册、登录和信息显示界面
 
 # 后端服务
 - 实现用户注册、登录和信息获取API
@@ -53,7 +53,7 @@
    ```
    编辑 `.env` 文件:
    ```
-   MONGODB_URI=mongodb://localhost:27017/aireading
+   MONGODB_URI=mongodb://localhost:27017/ai-reader
    JWT_SECRET=your_jwt_secret
    AI_API_KEY=your_ai_api_key
    ```
@@ -104,7 +104,7 @@
 
 ### Docker部署
 
-1. 构建��像
+1. 构建像
    ```bash
    docker-compose build
    ```

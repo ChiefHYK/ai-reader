@@ -10,7 +10,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('Connected to MongoDB'))
+.then(() => console.log('Connected to MongoDB for AI Reader'))
 .catch(err => console.error('MongoDB connection error:', err));
 
 // 中间件
@@ -26,6 +26,12 @@ const userRoutes = require('./routes/user.routes');
 
 // 使用用户路由
 app.use('/api/users', userRoutes);
+
+// 使用文本路由
+const textRoutes = require('./routes/text.routes');
+
+// 使用文本路由
+app.use('/api/texts', textRoutes);
 
 // 启动服务器
 app.listen(PORT, () => {
