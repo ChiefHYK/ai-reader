@@ -42,6 +42,12 @@ const ttsRoutes = require('./routes/tts.routes');
 // 使用TTS路由
 app.use('/api/tts', ttsRoutes);
 
+// 使用阅读历史路由
+const readingHistoryRoutes = require('./routes/reading_history.routes');
+
+// 使用阅读历史路由
+app.use('/api/reading-history', readingHistoryRoutes);
+
 // 启动服务器
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -14,13 +14,28 @@
 - lib/models: 数据模型
 - lib/views: UI视图
 - lib/services: 服务类
+  - user_service.dart
+  - text_service.dart
+  - tts_service.dart
+  - reading_history_service.dart
 - lib/utils: 工具类
 - lib/main.dart: 应用入口
+- lib/views/screens
+  - reading_history_screen.dart
+  - auth_page.dart
+  - home_page.dart
 
 ## 后端 (Node.js)
 
-- src/models: 数据模型
-- src/routes: 路由定义
+- src/models
+  - user.model.js
+  - text.model.js
+  - reading_history.model.js
+- src/routes
+  - user.routes.js
+  - text.routes.js
+  - reading_history.routes.js
+- src/index.js
 - src: 源代码
 - tests: 测试代码
 

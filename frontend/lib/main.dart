@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'services/user_service.dart';
 import 'services/text_service.dart';
 import 'services/tts_service.dart';
+import 'views/screens/reading_history_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,6 +35,21 @@ class AuthPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('AI Reader App'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReadingHistoryScreen(
+                    userId: 'current-user-id', // TODO: 替换为实际的用户ID
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
