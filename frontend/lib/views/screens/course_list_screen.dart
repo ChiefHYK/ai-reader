@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/course_service.dart';
+import 'course_detail_screen.dart';
 
 class CourseListScreen extends StatefulWidget {
   final String userId;
@@ -126,7 +127,14 @@ class _CourseListScreenState extends State<CourseListScreen> {
                       ),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: () {
-                        // TODO: 实现课程详情页面导航
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CourseDetailScreen(
+                              course: course,
+                            ),
+                          ),
+                        );
                       },
                     );
                   },
