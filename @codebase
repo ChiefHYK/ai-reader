@@ -24,6 +24,7 @@
 - lib/views/screens
   - course_list_screen.dart
   - course_detail_screen.dart
+  - chapter_player_screen.dart
   - reading_history_screen.dart
   - reading_detail_screen.dart
   - auth_page.dart

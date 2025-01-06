@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/course_service.dart';
+import 'chapter_player_screen.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final Map<String, dynamic> course;
@@ -149,7 +150,15 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                                 ),
                                 trailing: const Icon(Icons.play_arrow),
                                 onTap: () {
-                                  // TODO: 实现章节播放功能
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChapterPlayerScreen(
+                                        chapter: chapter,
+                                        courseTitle: widget.course['title'],
+                                      ),
+                                    ),
+                                  );
                                 },
                               ),
                             );
