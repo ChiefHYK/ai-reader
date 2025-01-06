@@ -18,6 +18,7 @@
   - text_service.dart
   - tts_service.dart
   - reading_history_service.dart
+  - course_service.dart
 - lib/utils: 工具类
 - lib/main.dart: 应用入口
 - lib/views/screens
@@ -32,10 +33,12 @@
   - user.model.js
   - text.model.js
   - reading_history.model.js
+  - course.model.js
 - src/routes
   - user.routes.js
   - text.routes.js
   - reading_history.routes.js
+  - course.routes.js
 - src/index.js
 - src: 源代码
 - tests: 测试代码
