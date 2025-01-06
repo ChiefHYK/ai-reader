@@ -3,6 +3,7 @@ import 'services/user_service.dart';
 import 'services/text_service.dart';
 import 'services/tts_service.dart';
 import 'views/screens/reading_history_screen.dart';
+import 'views/screens/course_list_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -148,6 +149,26 @@ class AuthPage extends StatelessWidget {
                 }
               },
               child: Text('Synthesize Text'),
+            ),
+          ],
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.book),
+              title: const Text('My Courses'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CourseListScreen(
+                      userId: 'current-user-id', // TODO: 替换为实际的用户ID
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),

@@ -1382,3 +1382,255 @@ onTap: () {
 需要继续开发其他功能吗？
 
 =====================================
+
+第十四步：实现课程管理基础功能
+创建课程模型：
+在 backend/src/models 目录下创建 course.model.js 文件。
+"""
+const mongoose = require('mongoose');
+
+// 定义章节Schema
+const chapterSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true
+  },
+  content: {
+    type: String,
+    required: true
+  },
+  duration: {
+    type: Number,
+    default: 0
+  }
+});
+
+// 定义课程Schema
+const courseSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  type: {
+    type: String,
+    enum: ['PDF', 'EPUB', 'TXT', 'RSS'],
+    required: true
+  },
+  chapters: [chapterSchema],
+  progress: {
+    type: Number,
+    default: 0
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const Course = mongoose.model('Course', courseSchema);
+module.exports = Course;
+"""
+创建课程路由：
+在 backend/src/routes 目录下创建 course.routes.js 文件。
+"""
+const express = require('express');
+const Course = require('../models/course.model');
+const router = express.Router();
+
+// 创建新课程
+router.post('/', async (req, res) => {
+  try {
+    const { userId, title, type, chapters } = req.body;
+    const newCourse = new Course({
+      userId,
+      title,
+      type,
+      chapters: chapters || []
+    });
+    await newCourse.save();
+    res.status(201).json(newCourse);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// 获取用户的所有课程
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const courses = await Course.find({ userId: req.params.userId });
+    res.status(200).json(courses);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// 更新课程进度
+router.put('/:id/progress', async (req, res) => {
+  try {
+    const { progress } = req.body;
+    const course = await Course.findByIdAndUpdate(
+      req.params.id,
+      { progress },
+      { new: true }
+    );
+    res.status(200).json(course);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+module.exports = router;
+"""
+创建前端课程服务：
+在 frontend/lib/services 目录下创建 course_service.dart 文件。
+"""
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class CourseService {
+  final String baseUrl = 'http://localhost:3000/api/courses';
+
+  // 创建新课程
+  Future<Map<String, dynamic>> createCourse(
+    String userId,
+    String title,
+    String type,
+    List<Map<String, dynamic>> chapters,
+  ) async {
+    final response = await http.post(
+      Uri.parse(baseUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'userId': userId,
+        'title': title,
+        'type': type,
+        'chapters': chapters,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to create course');
+    }
+  }
+
+  // 获取用户的所有课程
+  Future<List<dynamic>> getUserCourses(String userId) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/user/$userId'),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load courses');
+    }
+  }
+
+  // 更新课程进度
+  Future<Map<String, dynamic>> updateProgress(
+    String courseId,
+    double progress,
+  ) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/$courseId/progress'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'progress': progress}),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to update progress');
+    }
+  }
+}
+"""
+更新 README.md：
+"""
+## 功能更新
+- 课程管理
+  - 创建新课程
+  - 获取用户所有课程
+  - 更新课程进度
+"""
+更新 @codebase 文件：
+"""
+## 后端 (Node.js)
+- src/models
+  - course.model.js
+- src/routes
+  - course.routes.js
+"""
+使用 Git 提交更改：
+"""
+   git add .
+   git commit -m "feat: add course management functionality"
+   git push origin master
+"""
+这样，我们就完成了课程管理的基础功能实现。接下来，我们需要实现课程管理的界面部分。需要继续吗？
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
+
+=====================================
+
