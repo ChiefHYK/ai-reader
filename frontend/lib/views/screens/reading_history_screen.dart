@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/reading_history_service.dart';
+import 'reading_detail_screen.dart';
 
 class ReadingHistoryScreen extends StatefulWidget {
   final String userId;
@@ -58,7 +59,14 @@ class _ReadingHistoryScreenState extends State<ReadingHistoryScreen> {
                         'Date: ${DateTime.parse(history['readDate']).toString()}',
                       ),
                       onTap: () {
-                        // TODO: 实现点击查看详情功能
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReadingDetailScreen(
+                              history: history,
+                            ),
+                          ),
+                        );
                       },
                     );
                   },
