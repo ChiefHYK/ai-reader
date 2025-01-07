@@ -43,4 +43,15 @@ class UserService {
       throw Exception('Failed to load user profile');
     }
   }
+
+  Future<bool> isLoggedIn() async {
+    // 这里实现检查用户是否已登录的逻辑
+    // 例如检查本地存储的token是否有效
+    // 暂时返回false表示需要登录
+    return false;
+  }
+
+  Future<void> logout() async {
+    // TODO: 实现登出逻辑
+  }
 } 

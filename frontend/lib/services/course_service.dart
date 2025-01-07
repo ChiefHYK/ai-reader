@@ -60,4 +60,4 @@ class CourseService {
       throw Exception('Failed to update progress');
     }
   }
-} 
+}

@@ -1,178 +1,36 @@
 import 'package:flutter/material.dart';
-import 'services/user_service.dart';
-import 'services/text_service.dart';
-import 'services/tts_service.dart';
-import 'views/screens/reading_history_screen.dart';
-import 'views/screens/course_list_screen.dart';
+import 'package:flutter/services.dart';
+import 'views/screens/reader_screen.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  // 确保Flutter绑定初始化
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // 设置首选方向
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+  
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AI Reader App',
+      title: 'AI Reader',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: AuthPage(),
-    );
-  }
-}
-
-class AuthPage extends StatelessWidget {
-  final UserService userService = UserService();
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextService textService = TextService();
-  final TextEditingController textController = TextEditingController();
-  final TtsService ttsService = TtsService();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('AI Reader App'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.history),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ReadingHistoryScreen(
-                    userId: 'current-user-id', // TODO: 替换为实际的用户ID
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
-            ),
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            TextField(
-              controller: textController,
-              decoration: InputDecoration(labelText: 'Enter text to upload'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  await userService.register(
-                    usernameController.text,
-                    emailController.text,
-                    passwordController.text,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Registration successful')),
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Registration failed')),
-                  );
-                }
-              },
-              child: Text('Register'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  await userService.login(
-                    emailController.text,
-                    passwordController.text,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Login successful')),
-                  );
-                  // 获取并显示用户信息
-                  final userProfile = await userService.getUserProfile(emailController.text);
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('User Profile'),
-                      content: Text('Username: ${userProfile['username']}\nEmail: ${userProfile['email']}'),
-                    ),
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Login failed')),
-                  );
-                }
-              },
-              child: Text('Login'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  await textService.uploadText(textController.text);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Text uploaded successfully')),
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to upload text')),
-                  );
-                }
-              },
-              child: Text('Upload Text'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  await ttsService.synthesizeText(textController.text);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Text synthesized successfully')),
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to synthesize text')),
-                  );
-                }
-              },
-              child: Text('Synthesize Text'),
-            ),
-          ],
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.book),
-              title: const Text('My Courses'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CourseListScreen(
-                      userId: 'current-user-id', // TODO: 替换为实际的用户ID
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+      home: const ReaderScreen(
+        text: '欢迎使用 AI Reader！\n\n'
+             '这是一个示例文本，您可以在这里阅读和收听文章内容。\n\n'
+             '点击下方的播放按钮开始收听，或者使用设置按钮调整语音参数。',
       ),
     );
   }
 }
+

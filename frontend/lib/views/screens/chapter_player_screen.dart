@@ -20,11 +20,13 @@ class _ChapterPlayerScreenState extends State<ChapterPlayerScreen> {
   bool _isPlaying = false;
   bool _isPaused = false;
   double _playbackSpeed = 1.0;
+  String _currentText = '';
 
   @override
   void initState() {
     super.initState();
     _initTts();
+    _currentText = widget.chapter['content'];
   }
 
   // 初始化TTS服务
@@ -45,14 +47,14 @@ class _ChapterPlayerScreenState extends State<ChapterPlayerScreen> {
     try {
       if (_isPlaying) {
         if (_isPaused) {
-          await _ttsService.resume();
+          await _ttsService.speak(_currentText);
           setState(() => _isPaused = false);
         } else {
           await _ttsService.pause();
           setState(() => _isPaused = true);
         }
       } else {
-        await _ttsService.speak(widget.chapter['content']);
+        await _ttsService.speak(_currentText);
         setState(() {
           _isPlaying = true;
           _isPaused = false;
@@ -60,7 +62,7 @@ class _ChapterPlayerScreenState extends State<ChapterPlayerScreen> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Playback error: $e')),
+        SnackBar(content: Text('播放错误: $e')),
       );
     }
   }
@@ -96,8 +98,16 @@ class _ChapterPlayerScreenState extends State<ChapterPlayerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.courseTitle),
-        subtitle: Text(widget.chapter['title']),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.courseTitle),
+            Text(
+              widget.chapter['title'],
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
